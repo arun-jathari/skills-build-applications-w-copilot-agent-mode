@@ -5,10 +5,10 @@ import { useApiResource } from '../hooks/useApiResource.js';
 type WorkoutSuggestion = { title: string; focus?: string; minutes?: number; difficulty?: string; reason?: string };
 type WorkoutsResponse = { suggestions: WorkoutSuggestion[] };
 const userEmail = 'mona@example.com';
+const loadWorkouts = () => getJson<WorkoutsResponse>(`/api/workouts/suggestions/${encodeURIComponent(userEmail)}`);
 
 export default function Workouts() {
-  const path = `/api/workouts/suggestions/${encodeURIComponent(userEmail)}`;
-  const resource = useApiResource<WorkoutsResponse>(path, getJson);
+  const resource = useApiResource(loadWorkouts);
 
   return <CapabilityCard title="Workout suggestions" description="Recommend workouts from activity patterns.">
     {resource.status === 'loading' && <p role="status">Loading workout suggestions...</p>}

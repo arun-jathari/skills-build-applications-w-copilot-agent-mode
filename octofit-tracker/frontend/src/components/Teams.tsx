@@ -4,9 +4,10 @@ import { useApiResource } from '../hooks/useApiResource.js';
 
 type Team = { _id?: string; name: string; mascot: string; members: string[] };
 type TeamsResponse = { teams: Team[] };
+const loadTeams = () => getJson<TeamsResponse>('/api/teams');
 
 export default function Teams() {
-  const resource = useApiResource<TeamsResponse>('/api/teams', getJson);
+  const resource = useApiResource(loadTeams);
 
   return <CapabilityCard title="Teams" description="Manage teams and members.">
     {resource.status === 'loading' && <p role="status">Loading teams...</p>}

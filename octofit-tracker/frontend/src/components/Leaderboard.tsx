@@ -4,9 +4,10 @@ import { useApiResource } from '../hooks/useApiResource.js';
 
 type LeaderboardEntry = { teamName: string; totalPoints: number; rank: number };
 type LeaderboardResponse = { leaderboard: LeaderboardEntry[] };
+const loadLeaderboard = () => getJson<LeaderboardResponse>('/api/leaderboard');
 
 export default function Leaderboard() {
-  const resource = useApiResource<LeaderboardResponse>('/api/leaderboard', getJson);
+  const resource = useApiResource(loadLeaderboard);
 
   return <CapabilityCard title="Leaderboard" description="Compare team point totals.">
     {resource.status === 'loading' && <p role="status">Loading leaderboard...</p>}

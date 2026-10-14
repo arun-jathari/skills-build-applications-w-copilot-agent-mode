@@ -4,9 +4,10 @@ import { useApiResource } from '../hooks/useApiResource.js';
 
 type Activity = { _id?: string; type: string; minutes: number; points: number; occurredAt?: string };
 type ActivityResponse = { activities: Activity[] };
+const loadActivities = () => getJson<ActivityResponse>('/api/activities');
 
 export default function Activities() {
-  const resource = useApiResource<ActivityResponse>('/api/activities', getJson);
+  const resource = useApiResource(loadActivities);
 
   return <CapabilityCard title="Activities" description="Track student activity minutes and points.">
     {resource.status === 'loading' && <p role="status">Loading activities...</p>}

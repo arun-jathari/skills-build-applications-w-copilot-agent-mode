@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 
-type JsonGetter = <T>(path: string) => Promise<T>;
+type JsonLoader<T> = () => Promise<T>;
 
 export type ApiResource<T> =
   | { status: 'loading' }
   | { status: 'error'; error: Error }
   | { status: 'success'; data: T };
 
-export function useApiResource<T>(path: string, getJson: JsonGetter): ApiResource<T> {
+export function useApiResource<T>(load: JsonLoader<T>): ApiResource<T> {
   const [resource, setResource] = useState<ApiResource<T>>({ status: 'loading' });
 
   useEffect(() => {
     let current = true;
     setResource({ status: 'loading' });
-    getJson<T>(path)
+    load()
       .then((data) => {
         if (current) setResource({ status: 'success', data });
       })
@@ -28,7 +28,7 @@ export function useApiResource<T>(path: string, getJson: JsonGetter): ApiResourc
     return () => {
       current = false;
     };
-  }, [path, getJson]);
+  }, [load]);
 
   return resource;
 }
